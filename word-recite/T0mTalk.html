@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#153c35">
+  <title>T0mTalking · 动物学词书</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="T0mTalking 首页"><span>T</span><b>T0mTalking</b></a>
+    <nav aria-label="主导航">
+      <button class="nav-link active" data-page="study">学习</button>
+      <button class="nav-link" data-page="books">词书</button>
+      <button class="nav-link" data-page="progress">进度</button>
+    </nav>
+    <button class="profile" aria-label="学习者头像">Z</button>
+  </header>
+
+  <main>
+    <section id="studyPage" class="page active">
+      <div class="study-head">
+        <div>
+          <p class="eyebrow">CURRENT WORD BOOK</p>
+          <button id="bookSwitcher" class="book-switcher"><span id="bookIcon">🦉</span><span><b id="bookName"></b><small id="bookMeta"></small></span><i>⌄</i></button>
+          <div id="switcherMenu" class="switcher-menu"></div>
+        </div>
+        <div class="streak"><span>今日连续学习</span><strong><i>🔥</i> <span id="todayCount">0</span></strong></div>
+      </div>
+
+      <div class="study-layout">
+        <aside class="chapters-panel">
+          <div class="panel-title"><b>学习章节</b><button id="selectAll">全部</button></div>
+          <div id="chapterList"></div>
+        </aside>
+
+        <section class="practice">
+          <div class="practice-bar">
+            <div class="tabs"><button class="active" data-mode="flash">背诵卡</button><button data-mode="spell">拼写练习</button></div>
+            <button id="shuffle" class="soft-button">↝ 打乱</button>
+          </div>
+          <div class="session-progress"><span id="sessionLabel">1 / 1</span><div><i id="sessionBar"></i></div></div>
+
+          <article id="flashCard" class="word-card" tabindex="0" aria-label="单词卡，点击查看或收起释义">
+            <div class="card-front">
+              <span class="card-label">TERM</span>
+              <h1 id="flashTerm"></h1>
+              <button id="speakButton" class="sound" aria-label="朗读单词">◖))</button>
+              <p>点击卡片查看释义</p>
+            </div>
+            <div class="card-back">
+              <span class="card-label">MEANING</span>
+              <h2 id="flashMeaning"></h2>
+              <p id="flashNote"></p>
+              <small id="flashChapter"></small>
+            </div>
+          </article>
+
+          <article id="spellCard" class="spell-card" hidden>
+            <span class="card-label">SPELL THE TERM</span>
+            <h2 id="spellMeaning"></h2>
+            <p id="spellHint"></p>
+            <label for="spellInput">请输入英文单词或术语</label>
+            <input id="spellInput" autocomplete="off" spellcheck="false" placeholder="Type your answer...">
+            <div id="spellFeedback" class="feedback"></div>
+            <button id="checkSpell" class="primary">检查答案</button>
+          </article>
+
+          <div class="card-actions">
+            <button id="prevWord" class="round" aria-label="上一个">←</button>
+            <button id="againWord" class="result again">还不熟 <span>1</span></button>
+            <button id="knownWord" class="result known">认识 <span>2</span></button>
+            <button id="nextWord" class="round" aria-label="下一个">→</button>
+          </div>
+          <p class="keyboard-tip">键盘：空格查看释义 · 1 还不熟 · 2 认识 · ← → 切换</p>
+        </section>
+      </div>
+    </section>
+
+    <section id="booksPage" class="page narrow">
+      <div class="page-heading"><div><p class="eyebrow">WORD BOOK LIBRARY</p><h1>我的词书</h1><p>创建自己的词书，或随时切换回动物学词书。</p></div><button id="openAddBook" class="primary">＋ 新增词书</button></div>
+      <div id="bookGrid" class="book-grid"></div>
+    </section>
+
+    <section id="progressPage" class="page narrow">
+      <div class="page-heading"><div><p class="eyebrow">LEARNING OVERVIEW</p><h1>学习进度</h1><p>所有记录仅保存在你的浏览器中。</p></div></div>
+      <div class="stats-grid"><article><span>已认识</span><strong id="knownStat">0</strong></article><article><span>待巩固</span><strong id="againStat">0</strong></article><article><span>今日练习</span><strong id="todayStat">0</strong></article></div>
+      <div class="progress-card"><h2>词书掌握情况</h2><div id="bookProgress"></div></div>
+      <div class="review-columns">
+        <section class="progress-card review-card"><div class="review-title"><div><p class="eyebrow">SPELLING MISTAKES</p><h2>拼错的单词</h2></div><span id="mistakeCount">0</span></div><div id="mistakeHistory"></div></section>
+        <section class="progress-card review-card"><div class="review-title"><div><p class="eyebrow">NEEDS REVIEW</p><h2>待巩固词汇</h2></div><span id="reviewCount">0</span></div><div id="reviewHistory"></div></section>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="addBookDialog">
+    <form id="addBookForm" method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">NEW WORD BOOK</p><h2>新增词书</h2></div><button type="button" id="closeDialog" class="close">×</button></div>
+      <label>词书名称<input name="name" required maxlength="30" placeholder="例如：细胞生物学"></label>
+      <label>简介<input name="description" maxlength="60" placeholder="一句话描述这本词书"></label>
+      <label>词汇内容 <small>每行一个：英文 | 中文 | 提示（提示可省略）</small><textarea name="words" required rows="10" placeholder="mitosis | 有丝分裂 | nuclear division\nmeiosis | 减数分裂"></textarea></label>
+      <label>或从文件导入 <small>支持 TXT、CSV、JSON；文件内容会填入上方并可继续修改</small><span class="file-line"><input id="importFile" type="file" accept=".txt,.csv,.json,text/plain,text/csv,application/json"></span></label>
+      <div class="dialog-actions"><button type="button" id="cancelDialog" class="soft-button">取消</button><button class="primary" value="default">创建词书</button></div>
+    </form>
+  </dialog>
+  <div id="toast" role="status"></div>
+  <script src="vocabulary.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
